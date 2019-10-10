@@ -1,0 +1,195 @@
+
+text.elf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <_start>:
+   0:	e3a00453 	mov	r0, #1392508928	; 0x53000000
+   4:	e3a01000 	mov	r1, #0
+   8:	e5801000 	str	r1, [r0]
+   c:	e3a01000 	mov	r1, #0
+  10:	e5910000 	ldr	r0, [r1]
+  14:	e2800001 	add	r0, r0, #1
+  18:	e5810000 	str	r0, [r1]
+  1c:	e5912000 	ldr	r2, [r1]
+  20:	e59fd014 	ldr	sp, [pc, #20]	; 3c <halt+0x4>
+  24:	e1500002 	cmp	r0, r2
+  28:	e3a0da01 	mov	sp, #4096	; 0x1000
+  2c:	e2400001 	sub	r0, r0, #1
+  30:	e5810000 	str	r0, [r1]
+  34:	eb00001d 	bl	b0 <main>
+
+00000038 <halt>:
+  38:	eafffffe 	b	38 <halt>
+  3c:	40001000 	andmi	r1, r0, r0
+
+00000040 <delayed>:
+  40:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+  44:	e28db000 	add	fp, sp, #0
+  48:	e24dd014 	sub	sp, sp, #20
+  4c:	e50b0010 	str	r0, [fp, #-16]
+  50:	e3a03004 	mov	r3, #4
+  54:	e50b3008 	str	r3, [fp, #-8]
+  58:	ea000008 	b	80 <delayed+0x40>
+  5c:	e51b3010 	ldr	r3, [fp, #-16]
+  60:	e50b300c 	str	r3, [fp, #-12]
+  64:	ea000002 	b	74 <delayed+0x34>
+  68:	e51b300c 	ldr	r3, [fp, #-12]
+  6c:	e2433001 	sub	r3, r3, #1
+  70:	e50b300c 	str	r3, [fp, #-12]
+  74:	e51b300c 	ldr	r3, [fp, #-12]
+  78:	e3530000 	cmp	r3, #0
+  7c:	1afffff9 	bne	68 <delayed+0x28>
+  80:	e51b3008 	ldr	r3, [fp, #-8]
+  84:	e3530000 	cmp	r3, #0
+  88:	03a02000 	moveq	r2, #0
+  8c:	13a02001 	movne	r2, #1
+  90:	e20220ff 	and	r2, r2, #255	; 0xff
+  94:	e2433001 	sub	r3, r3, #1
+  98:	e50b3008 	str	r3, [fp, #-8]
+  9c:	e3520000 	cmp	r2, #0
+  a0:	1affffed 	bne	5c <delayed+0x1c>
+  a4:	e28bd000 	add	sp, fp, #0
+  a8:	e8bd0800 	pop	{fp}
+  ac:	e12fff1e 	bx	lr
+
+000000b0 <main>:
+  b0:	e92d4800 	push	{fp, lr}
+  b4:	e28db004 	add	fp, sp, #4
+  b8:	eb000020 	bl	140 <led_config>
+  bc:	e59f0074 	ldr	r0, [pc, #116]	; 138 <main+0x88>
+  c0:	e3a01010 	mov	r1, #16
+  c4:	e3a02000 	mov	r2, #0
+  c8:	eb000029 	bl	174 <gpio_set>
+  cc:	e59f0068 	ldr	r0, [pc, #104]	; 13c <main+0x8c>
+  d0:	ebffffda 	bl	40 <delayed>
+  d4:	e59f005c 	ldr	r0, [pc, #92]	; 138 <main+0x88>
+  d8:	e3a01010 	mov	r1, #16
+  dc:	e3a02010 	mov	r2, #16
+  e0:	eb000023 	bl	174 <gpio_set>
+  e4:	e59f004c 	ldr	r0, [pc, #76]	; 138 <main+0x88>
+  e8:	e3a01020 	mov	r1, #32
+  ec:	e3a02000 	mov	r2, #0
+  f0:	eb00001f 	bl	174 <gpio_set>
+  f4:	e59f0040 	ldr	r0, [pc, #64]	; 13c <main+0x8c>
+  f8:	ebffffd0 	bl	40 <delayed>
+  fc:	e59f0034 	ldr	r0, [pc, #52]	; 138 <main+0x88>
+ 100:	e3a01020 	mov	r1, #32
+ 104:	e3a02020 	mov	r2, #32
+ 108:	eb000019 	bl	174 <gpio_set>
+ 10c:	e59f0024 	ldr	r0, [pc, #36]	; 138 <main+0x88>
+ 110:	e3a01040 	mov	r1, #64	; 0x40
+ 114:	e3a02000 	mov	r2, #0
+ 118:	eb000015 	bl	174 <gpio_set>
+ 11c:	e59f0018 	ldr	r0, [pc, #24]	; 13c <main+0x8c>
+ 120:	ebffffc6 	bl	40 <delayed>
+ 124:	e59f000c 	ldr	r0, [pc, #12]	; 138 <main+0x88>
+ 128:	e3a01040 	mov	r1, #64	; 0x40
+ 12c:	e3a02040 	mov	r2, #64	; 0x40
+ 130:	eb00000f 	bl	174 <gpio_set>
+ 134:	eaffffe0 	b	bc <main+0xc>
+ 138:	56000054 	undefined instruction 0x56000054
+ 13c:	00002710 	andeq	r2, r0, r0, lsl r7
+
+00000140 <led_config>:
+ 140:	e92d4800 	push	{fp, lr}
+ 144:	e28db004 	add	fp, sp, #4
+ 148:	e59f001c 	ldr	r0, [pc, #28]	; 16c <led_config+0x2c>
+ 14c:	e3a01c3f 	mov	r1, #16128	; 0x3f00
+ 150:	e3a02c15 	mov	r2, #5376	; 0x1500
+ 154:	eb000006 	bl	174 <gpio_set>
+ 158:	e59f0010 	ldr	r0, [pc, #16]	; 170 <led_config+0x30>
+ 15c:	e3a01070 	mov	r1, #112	; 0x70
+ 160:	e3a02070 	mov	r2, #112	; 0x70
+ 164:	eb000002 	bl	174 <gpio_set>
+ 168:	e8bd8800 	pop	{fp, pc}
+ 16c:	56000050 	undefined instruction 0x56000050
+ 170:	56000054 	undefined instruction 0x56000054
+
+00000174 <gpio_set>:
+ 174:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+ 178:	e28db000 	add	fp, sp, #0
+ 17c:	e24dd01c 	sub	sp, sp, #28
+ 180:	e50b0010 	str	r0, [fp, #-16]
+ 184:	e50b1014 	str	r1, [fp, #-20]
+ 188:	e50b2018 	str	r2, [fp, #-24]
+ 18c:	e51b3010 	ldr	r3, [fp, #-16]
+ 190:	e50b3008 	str	r3, [fp, #-8]
+ 194:	e51b3014 	ldr	r3, [fp, #-20]
+ 198:	e1e02003 	mvn	r2, r3
+ 19c:	e51b3018 	ldr	r3, [fp, #-24]
+ 1a0:	e0023003 	and	r3, r2, r3
+ 1a4:	e3530000 	cmp	r3, #0
+ 1a8:	0a000002 	beq	1b8 <gpio_set+0x44>
+ 1ac:	e3e03000 	mvn	r3, #0
+ 1b0:	e1a00003 	mov	r0, r3
+ 1b4:	ea00000c 	b	1ec <gpio_set+0x78>
+ 1b8:	e51b3008 	ldr	r3, [fp, #-8]
+ 1bc:	e5932000 	ldr	r2, [r3]
+ 1c0:	e51b3014 	ldr	r3, [fp, #-20]
+ 1c4:	e1e03003 	mvn	r3, r3
+ 1c8:	e0022003 	and	r2, r2, r3
+ 1cc:	e51b3008 	ldr	r3, [fp, #-8]
+ 1d0:	e5832000 	str	r2, [r3]
+ 1d4:	e51b3008 	ldr	r3, [fp, #-8]
+ 1d8:	e5932000 	ldr	r2, [r3]
+ 1dc:	e51b3018 	ldr	r3, [fp, #-24]
+ 1e0:	e1822003 	orr	r2, r2, r3
+ 1e4:	e51b3008 	ldr	r3, [fp, #-8]
+ 1e8:	e5832000 	str	r2, [r3]
+ 1ec:	e28bd000 	add	sp, fp, #0
+ 1f0:	e8bd0800 	pop	{fp}
+ 1f4:	e12fff1e 	bx	lr
+
+Disassembly of section .ARM.attributes:
+
+00000000 <.ARM.attributes>:
+   0:	00002641 	andeq	r2, r0, r1, asr #12
+   4:	61656100 	cmnvs	r5, r0, lsl #2
+   8:	01006962 	tsteq	r0, r2, ror #18
+   c:	0000001c 	andeq	r0, r0, ip, lsl r0
+  10:	45543505 	ldrbmi	r3, [r4, #-1285]	; 0x505
+  14:	08040600 	stmdaeq	r4, {r9, sl}
+  18:	12010901 	andne	r0, r1, #16384	; 0x4000
+  1c:	15011404 	strne	r1, [r1, #-1028]	; 0x404
+  20:	18031701 	stmdane	r3, {r0, r8, r9, sl, ip}
+  24:	Address 0x00000024 is out of bounds.
+
+
+Disassembly of section .comment:
+
+00000000 <.comment>:
+   0:	43434700 	movtmi	r4, #14080	; 0x3700
+   4:	5328203a 	teqpl	r8, #58	; 0x3a
+   8:	6372756f 	cmnvs	r2, #465567744	; 0x1bc00000
+   c:	20797265 	rsbscs	r7, r9, r5, ror #4
+  10:	202b2b47 	eorcs	r2, fp, r7, asr #22
+  14:	6574694c 	ldrbvs	r6, [r4, #-2380]!	; 0x94c
+  18:	30303220 	eorscc	r3, r0, r0, lsr #4
+  1c:	2d337139 	ldfcss	f7, [r3, #-228]!	; 0xffffff1c
+  20:	20293736 	eorcs	r3, r9, r6, lsr r7
+  24:	2e342e34 	mrccs	14, 1, r2, cr4, cr4, {1}
+  28:	47000031 	smladxmi	r0, r1, r0, r0
+  2c:	203a4343 	eorscs	r4, sl, r3, asr #6
+  30:	756f5328 	strbvc	r5, [pc, #-808]!	; fffffd10 <gpio_set+0xfffffb9c>
+  34:	72656372 	rsbvc	r6, r5, #-939524095	; 0xc8000001
+  38:	2b472079 	blcs	11c8224 <gpio_set+0x11c80b0>
+  3c:	694c202b 	stmdbvs	ip, {r0, r1, r3, r5, sp}^
+  40:	32206574 	eorcc	r6, r0, #486539264	; 0x1d000000
+  44:	71393030 	teqvc	r9, r0, lsr r0
+  48:	37362d33 	undefined instruction 0x37362d33
+  4c:	2e342029 	cdpcs	0, 3, cr2, cr4, cr9, {1}
+  50:	00312e34 	eorseq	r2, r1, r4, lsr lr
+  54:	43434700 	movtmi	r4, #14080	; 0x3700
+  58:	5328203a 	teqpl	r8, #58	; 0x3a
+  5c:	6372756f 	cmnvs	r2, #465567744	; 0x1bc00000
+  60:	20797265 	rsbscs	r7, r9, r5, ror #4
+  64:	202b2b47 	eorcs	r2, fp, r7, asr #22
+  68:	6574694c 	ldrbvs	r6, [r4, #-2380]!	; 0x94c
+  6c:	30303220 	eorscc	r3, r0, r0, lsr #4
+  70:	2d337139 	ldfcss	f7, [r3, #-228]!	; 0xffffff1c
+  74:	20293736 	eorcs	r3, r9, r6, lsr r7
+  78:	2e342e34 	mrccs	14, 1, r2, cr4, cr4, {1}
+  7c:	Address 0x0000007c is out of bounds.
+
